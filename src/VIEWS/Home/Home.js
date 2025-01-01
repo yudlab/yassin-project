@@ -1,15 +1,16 @@
-import React, { useContext } from "react";
-import { GlobalContextProvider, useGlobalContext } from "../../PROVIDER/GlobalContextProvider";
+import React from "react";
+import { useGlobalContext } from "../../PROVIDER/GlobalContextProvider";
 import './home.scss';
 
 const Home = () => {
-  const { globalData } = useContext(useGlobalContext);
+  const { globalData, globalFunction } = useGlobalContext();
+
   return (
-    <GlobalContextProvider>
-      <div className="main">Home
-      </div>
-      <pre>{JSON.stringify(globalData)}</pre>
-    </GlobalContextProvider>
+    <div className="main">
+      <h1>Home</h1>
+      <pre>{JSON.stringify(globalData, null, 2)}</pre>
+      <button onClick={globalFunction.flush}>Flush Data</button>
+    </div>
   );
 };
 
