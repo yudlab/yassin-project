@@ -1,26 +1,22 @@
 import React, { useEffect } from 'react';
 import 'aframe';
-import * as THREE from 'three';  // Import three.js
+import * as THREE from 'three';
 
 function Home() {
   useEffect(() => {
-    // Access the A-Frame scene and the camera
+    // This function will allow us to manipulate 3D objects using Three.js and A-Frame
     const scene = document.querySelector('a-scene');
     const camera = document.querySelector('[camera]');
 
-    // Create a new Three.js Cube and add it to the scene
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x4CC3D9 });
-    const cube = new THREE.Mesh(geometry, material);
-    
-    // Set cube position and rotation
-    cube.position.set(0, 1, -3);
-    scene.object3D.add(cube);
+    // Simple three.js scene manipulation: Add a rotating cube
+    const cube = document.createElement('a-box');
+    cube.setAttribute('position', '0 1 -3');
+    cube.setAttribute('color', '#4CC3D9');
+    scene.appendChild(cube);
 
-    // Simple animation using three.js
     const animate = () => {
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
+      cube.object3D.rotation.x += 0.01;
+      cube.object3D.rotation.y += 0.01;
 
       requestAnimationFrame(animate);
     };
@@ -37,8 +33,17 @@ function Home() {
         arjs="sourceType: webcam; debugUIEnabled: false;"
         renderer="antialias: true; colorManagement: true"
       >
-        {/* Camera setup for AR */}
+        {/* Camera Setup for AR */}
         <a-entity camera></a-entity>
+
+        {/* Interactive Box */}
+        <a-box
+          position="0 1 0"
+          rotation="0 45 0"
+          scale="0.5 0.5 0.5"
+          color="#4CC3D9"
+          animation="property: rotation; to: 360 360 360; loop: true; dur: 10000"
+        ></a-box>
 
         {/* Ground Plane */}
         <a-plane
