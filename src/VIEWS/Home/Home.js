@@ -11,7 +11,6 @@ const Home = () => {
   const videoRef = useRef(null);
   const ballVelocity = useRef(new THREE.Vector3(0, 0, 0)); // Ball velocity for throw
   const ballAcceleration = useRef(new THREE.Vector3(0, -0.1, 0)); // Gravity
-  const lastGestureTime = useRef(0); // Track time of last gesture
   const lastFrameTime = useRef(0);
   const handPosition = useRef(new THREE.Vector3(0, 0, 0)); // Position of the hand during the grab gesture
 
@@ -155,7 +154,7 @@ const Home = () => {
   useEffect(() => {
     initThreeJS();
     detectHandGesture(); // Initialize hand gesture detection
-  }, []); // Empty dependency array to run only once on mount
+  }, [detectHandGesture]); // Empty dependency array to run only once on mount
 
   return (
     <div>
