@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "aframe": "^1.7.1",
+    "handtrackjs": "^0.1.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.0.2",
