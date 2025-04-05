@@ -1,0 +1,67 @@
+/* General styles */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  /* Header */
+  .header {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header .logo {
+    font-size: 2rem;
+  }
+  
+  .header nav ul {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .header nav ul li a {
+    color: white;
+    font-size: 1rem;
+    transition: color 0.3s;
+  }
+  
+  .header nav ul li a:hover {
+    color: #FFD700;
+  }
+  
+  /* Sections */
+  section {
+    padding: 60px 20px;
+  }
+  
+  .about-section, .services-section, .contact-section {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .services-section .service-item {
+    margin-bottom: 20px;
+  }
+  
+  footer {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
+  
