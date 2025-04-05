@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import * as THREE from "three";
-import { load } from "handtrackjs"; // Correctly import load from handtrackjs
+import { load } from "handtrackjs";
 
 const Home = () => {
   const [gesture, setGesture] = useState(null);
@@ -68,7 +68,7 @@ const Home = () => {
     animate();
   };
 
-  const detectHandGesture = () => {
+  const detectHandGesture = useCallback(() => {
     load().then((model) => {
       const video = videoRef.current;
       if (!video) {
@@ -76,6 +76,34 @@ const Home = () => {
         return;
       }
 
+
+      // Continuous hand gesture detection using requestAnimationFrame
+      const continuousDetection = (model, video) => {
+        let lastDetectionTime = 0;
+        const detectionInterval = 200; // Time between detections (ms)
+
+        const detect = () => {
+          requestAnimationFrame(detect);
+
+          const currentTime = performance.now();
+          if (currentTime - lastDetectionTime < detectionInterval) {
+            return; // Don't run the detection if enough time hasn't passed
+          }
+          lastDetectionTime = currentTime;
+
+          model.detect(video).then((predictions) => {
+            if (predictions.length > 0) {
+              const newGesture = identifyGesture(predictions);
+              setGesture(newGesture);
+              handleGestureAction(newGesture, predictions);
+            } else {
+              setGesture(null); // Reset if no hand detected
+            }
+          });
+        };
+
+        detect();
+      };
       // Start video feed
       navigator.mediaDevices
         .getUserMedia({ video: true })
@@ -92,35 +120,8 @@ const Home = () => {
           console.error("Error accessing webcam:", err);
         });
     });
-  };
+  }, []); // Empty dependency array ensures this doesn't change
 
-  // Continuous hand gesture detection using requestAnimationFrame
-  const continuousDetection = (model, video) => {
-    let lastDetectionTime = 0;
-    const detectionInterval = 200; // Time between detections (ms)
-
-    const detect = () => {
-      requestAnimationFrame(detect);
-
-      const currentTime = performance.now();
-      if (currentTime - lastDetectionTime < detectionInterval) {
-        return; // Don't run the detection if enough time hasn't passed
-      }
-      lastDetectionTime = currentTime;
-
-      model.detect(video).then((predictions) => {
-        if (predictions.length > 0) {
-          const newGesture = identifyGesture(predictions);
-          setGesture(newGesture);
-          handleGestureAction(newGesture, predictions);
-        } else {
-          setGesture(null); // Reset if no hand detected
-        }
-      });
-    };
-
-    detect();
-  };
 
   const identifyGesture = (predictions) => {
     if (predictions.length > 0) {
@@ -154,7 +155,7 @@ const Home = () => {
   useEffect(() => {
     initThreeJS();
     detectHandGesture(); // Initialize hand gesture detection
-  }, [detectHandGesture]); // Empty dependency array to run only once on mount
+  }, [detectHandGesture]); // Add detectHandGesture to dependency array
 
   return (
     <div>
