@@ -1,51 +1,51 @@
 import React, { useEffect } from 'react';
 import 'aframe';
-import * as THREE from 'three';
 
 function Home() {
   useEffect(() => {
-    // This function will allow us to manipulate 3D objects using Three.js and A-Frame
-    const scene = document.querySelector('a-scene');
-    const camera = document.querySelector('[camera]');
-
-    // Simple three.js scene manipulation: Add a rotating cube
-    const cube = document.createElement('a-box');
-    cube.setAttribute('position', '0 1 -3');
-    cube.setAttribute('color', '#4CC3D9');
-    scene.appendChild(cube);
-
-    const animate = () => {
-      cube.object3D.rotation.x += 0.01;
-      cube.object3D.rotation.y += 0.01;
-
-      requestAnimationFrame(animate);
-    };
-
-    animate();
+    // Custom setup code if needed (no need for AR.js)
   }, []);
+
+  const handleCubeClick = (e) => {
+    // Get the cube element
+    const cube = e.target;
+    
+    // Change color randomly when clicked
+    const colors = ['#4CC3D9', '#FF5733', '#DAF7A6', '#C70039'];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    cube.setAttribute('color', randomColor);
+
+    // Move cube to a new random position
+    const randomX = (Math.random() * 5) - 2.5;  // Random X between -2.5 and 2.5
+    const randomZ = (Math.random() * 5) - 2.5;  // Random Z between -2.5 and 2.5
+    cube.setAttribute('position', `${randomX} 1 ${randomZ}`);
+  };
 
   return (
     <div className="App">
-      <h1>AR with Camera and Three.js Integration</h1>
-
+      <h1>Interactive AR with A-Frame and WebXR</h1>
       <a-scene
         embedded
-        arjs="sourceType: webcam; debugUIEnabled: false;"
+        arjs="sourceType: webcam; debugUIEnabled: false;" 
+        vr-mode-ui="enabled: false"
         renderer="antialias: true; colorManagement: true"
       >
-        {/* Camera Setup for AR */}
+        {/* Camera for AR */}
         <a-entity camera></a-entity>
 
-        {/* Interactive Box */}
+        {/* Interactive Cube */}
         <a-box
           position="0 1 0"
           rotation="0 45 0"
           scale="0.5 0.5 0.5"
           color="#4CC3D9"
           animation="property: rotation; to: 360 360 360; loop: true; dur: 10000"
+          event-set__enter="scale: 1.5 1.5 1.5"
+          event-set__leave="scale: 0.5 0.5 0.5"
+          onclick={handleCubeClick}
         ></a-box>
 
-        {/* Ground Plane */}
+        {/* Ground plane for AR context */}
         <a-plane
           position="0 0 0"
           rotation="-90 0 0"
