@@ -1,70 +1,59 @@
-import React, { useState, useEffect } from 'react';
-import './home.scss';
-import LoadingAnimation from '../../COMPONENTS/Loader/Loader'; // Make sure to import the animation component
+import React, { useEffect } from 'react';
+import 'aframe';
 
 function Home() {
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    // Simulate a loading delay (for example, fetching data, etc.)
-    setTimeout(() => {
-      setLoading(false);
-    }, 3000); // 3 seconds loading time
+    // Custom setup code if needed (no need for AR.js)
   }, []);
+
+  const handleCubeClick = (e) => {
+    // Get the cube element
+    const cube = e.target;
+    
+    // Change color randomly when clicked
+    const colors = ['#4CC3D9', '#FF5733', '#DAF7A6', '#C70039'];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    cube.setAttribute('color', randomColor);
+
+    // Move cube to a new random position
+    const randomX = (Math.random() * 5) - 2.5;  // Random X between -2.5 and 2.5
+    const randomZ = (Math.random() * 5) - 2.5;  // Random Z between -2.5 and 2.5
+    cube.setAttribute('position', `${randomX} 1 ${randomZ}`);
+  };
 
   return (
     <div className="home">
-      {loading ? (
-        <LoadingAnimation /> // Show the loading animation while the page is loading
-      ) : (
-        <>
-          <header className="header">
-            <h1 className="logo">Contracting Services</h1>
-            <nav>
-              <ul>
-                <li><a href="#about">About Us</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#contact">Contact</a></li>
-              </ul>
-            </nav>
-          </header>
-          
-          <section id="about" className="about-section">
-            <h2>About Us</h2>
-            <p>We are a trusted contracting company providing quality building services for residential and commercial projects. With over 20 years of experience, we ensure every project is done right and on time.</p>
-          </section>
+      <h1>Interactive AR with A-Frame and WebXR</h1>
+      <a-scene
+        embedded
+        arjs="sourceType: webcam; debugUIEnabled: false;" 
+        vr-mode-ui="enabled: false"
+        renderer="antialias: true; colorManagement: true"
+      >
+        {/* Camera for AR */}
+        <a-entity camera></a-entity>
 
-          <section id="services" className="services-section">
-            <h2>Our Services</h2>
-            <div className="service-item">
-              <h3>Residential Construction</h3>
-              <p>We offer complete residential construction services, from foundations to finishing touches.</p>
-            </div>
-            <div className="service-item">
-              <h3>Commercial Construction</h3>
-              <p>Our commercial services include office spaces, retail stores, and industrial facilities.</p>
-            </div>
-            <div className="service-item">
-              <h3>Renovation & Remodeling</h3>
-              <p>We specialize in home and office remodeling to match your vision and needs.</p>
-            </div>
-          </section>
+        {/* Interactive Cube */}
+        <a-box
+          position="0 1 0"
+          rotation="0 45 0"
+          scale="0.5 0.5 0.5"
+          color="#4CC3D9"
+          animation="property: rotation; to: 360 360 360; loop: true; dur: 10000"
+          event-set__enter="scale: 1.5 1.5 1.5"
+          event-set__leave="scale: 0.5 0.5 0.5"
+          onclick={handleCubeClick}
+        ></a-box>
 
-          <section id="contact" className="contact-section">
-            <h2>Contact Us</h2>
-            <form>
-              <input type="text" placeholder="Your Name" required />
-              <input type="email" placeholder="Your Email" required />
-              <textarea placeholder="Your Message" required></textarea>
-              <button type="submit">Send Message</button>
-            </form>
-          </section>
-
-          <footer className="footer">
-            <p>&copy; 2025 Contracting Services. All rights reserved.</p>
-          </footer>
-        </>
-      )}
+        {/* Ground plane for AR context */}
+        <a-plane
+          position="0 0 0"
+          rotation="-90 0 0"
+          width="10"
+          height="10"
+          color="#7BC8A4"
+        ></a-plane>
+      </a-scene>
     </div>
   );
 }
