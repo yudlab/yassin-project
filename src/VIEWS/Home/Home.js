@@ -1,49 +1,54 @@
 import React, { useEffect } from 'react';
-import * as THREE from 'three';
+import 'aframe';
+import * as THREE from 'three';  // Import three.js
 
 function Home() {
   useEffect(() => {
-    // Create the scene
-    const scene = new THREE.Scene();
-    
-    // Create the camera
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    
-    // Create the renderer and append it to the body
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-    
-    // Create a cube geometry
-    const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    // Access the A-Frame scene and the camera
+    const scene = document.querySelector('a-scene');
+    const camera = document.querySelector('[camera]');
+
+    // Create a new Three.js Cube and add it to the scene
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const material = new THREE.MeshBasicMaterial({ color: 0x4CC3D9 });
     const cube = new THREE.Mesh(geometry, material);
     
-    // Add the cube to the scene
-    scene.add(cube);
-    
-    // Position the camera
-    camera.position.z = 5;
-    
-    // Animate the scene
+    // Set cube position and rotation
+    cube.position.set(0, 1, -3);
+    scene.object3D.add(cube);
+
+    // Simple animation using three.js
     const animate = () => {
-      requestAnimationFrame(animate);
-      
-      // Rotate the cube
       cube.rotation.x += 0.01;
       cube.rotation.y += 0.01;
-      
-      // Render the scene
-      renderer.render(scene, camera);
+
+      requestAnimationFrame(animate);
     };
-    
-    animate();  // Start the animation
+
+    animate();
   }, []);
 
   return (
     <div className="App">
-      <h1>Three.js with React</h1>
-      <p>Check the rotating 3D cube!</p>
+      <h1>AR with Camera and Three.js Integration</h1>
+
+      <a-scene
+        embedded
+        arjs="sourceType: webcam; debugUIEnabled: false;"
+        renderer="antialias: true; colorManagement: true"
+      >
+        {/* Camera setup for AR */}
+        <a-entity camera></a-entity>
+
+        {/* Ground Plane */}
+        <a-plane
+          position="0 0 0"
+          rotation="-90 0 0"
+          width="10"
+          height="10"
+          color="#7BC8A4"
+        ></a-plane>
+      </a-scene>
     </div>
   );
 }
